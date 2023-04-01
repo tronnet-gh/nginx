@@ -1,0 +1,18 @@
+server {
+    listen 80;
+    server_name client.tronnet.net;
+    rewrite ^(.*) https://$host$1 permanent;
+}
+server {
+    listen 443 ssl http2;
+    server_name client.tronnet.net;
+    include /etc/nginx/snippets/ssl-params.conf;
+    location / {
+        proxy_pass http://proxmoxaas.dmz:8080;
+	include /etc/nginx/snippets/proxy-params.conf;
+    }
+    location /api/ {
+        proxy_pass http://proxmoxaas.dmz:80;
+        include /etc/nginx/snippets/proxy-params.conf;
+    }
+}
