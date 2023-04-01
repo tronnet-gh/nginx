@@ -1,0 +1,15 @@
+server {
+    listen 80;
+    server_name mail.tronnet.net;
+    rewrite ^(.*) https://$host$1 permanent;
+}
+ 
+server {
+    listen 443 ssl http2;
+    server_name mail.tronnet.net;
+    include /etc/nginx/snippets/ssl-params.conf;
+    location / {
+	proxy_pass https://mail2.dmz;
+	include /etc/nginx/snippets/proxy-params.conf;	
+    }
+}
